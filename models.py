@@ -20,6 +20,7 @@ class User(UserBase, table=True):
     id:uuid.UUID = Field(default_factory=uuid.uuid4,primary_key=True)
     is_active: bool | None = Field(description="Active User", default=True)
 
+    #ralacion con prestamos
     lends: list["Lend"] = Relationship(back_populates="user")
 
 class Library(LibraryBase, table=True):
@@ -36,6 +37,7 @@ class Book(BookBase, table=True):
     id: uuid.UUID = Field(default_factory=uuid.uuid4,primary_key=True)
     is_active: bool | None = Field(description="Active Book", default=True)
 
+    #relacion con prestamos
     lends : list["Lend"] = Relationship(back_populates="book")
 class LendBookBase(SQLModel):
     loan_date: datetime.date = Field(default_factory=datetime.date.today)
@@ -48,8 +50,10 @@ class Lend(LendBookBase, table=True):
     user_id: uuid.UUID = Field(foreign_key="user.id")#relacion entre clase lend y clase user
     book_id: uuid.UUID = Field(foreign_key="book.id")#relacion entre clase book y clase prestamo
 
+    #relaciones hacia muchos usuarios y muchos libros
     user:"User" = Relationship(back_populates="lends")
     book:"Book" = Relationship(back_populates="lends")
+
 class CreateBook(UserBase):
     pass
 
