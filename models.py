@@ -36,7 +36,7 @@ class Book(BookBase, table=True):
     id: uuid.UUID = Field(default_factory=uuid.uuid4,primary_key=True)
     is_active: bool | None = Field(description="Active Book", default=True)
 
-    lends : list["Lend"]Relationship(back_populates="book")
+    lends : list["Lend"] = Relationship(back_populates="book")
 class LendBookBase(SQLModel):
     loan_date: datetime.date = Field(default_factory=datetime.date.today)
     return_date: datetime.date | None = None
