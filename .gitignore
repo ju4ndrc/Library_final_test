@@ -3,3 +3,5 @@ __
 *.db
 *venv
 .venv
+.idea
+*library.sqlite3
