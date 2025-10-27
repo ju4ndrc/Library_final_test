@@ -5,3 +5,5 @@ __
 .venv
 .idea
 *library.sqlite3
+*.env
+.env
