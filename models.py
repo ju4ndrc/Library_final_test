@@ -1,6 +1,6 @@
 import datetime
+from typing import List
 
-from markdown_it.rules_block import table
 from sqlmodel import SQLModel, Field,Relationship
 from utils import Rol
 import uuid
@@ -39,6 +39,10 @@ class Book(BookBase, table=True):
 
     #relacion con prestamos
     lends : list["Lend"] = Relationship(back_populates="book")
+    #relacion inversa con author
+    author_id: uuid.UUID = Field(foreign_key="author.id", ondelete="CASCADE")
+    author : "Author" = Relationship(back_populates="books")
+
 class LendBookBase(SQLModel):
     loan_date: datetime.date = Field(default_factory=datetime.date.today)
     return_date: datetime.date | None = None
@@ -53,6 +57,18 @@ class Lend(LendBookBase, table=True):
     #relaciones hacia muchos usuarios y muchos libros
     user:"User" = Relationship(back_populates="lends")
     book:"Book" = Relationship(back_populates="lends")
+
+class AuthorBase(SQLModel):
+    name:str | None = Field(description="Authors name")
+    origin_country:str | None = Field(description="Origin country")
+    year: int | None = Field(description="Born year")
+
+class Author(AuthorBase, table=True):
+    id: uuid.UUID = Field(default_factory=uuid.uuid4, primary_key=True)
+
+    #cascade delete reference https://sqlmodel.tiangolo.com/tutorial/relationship-attributes/cascade-delete-relationships/?utm_source=chatgpt.com#configure-automatic-deletion
+    books: List["Book"] = Relationship(back_populates="author", cascade_delete=True)
+
 
 class CreateBook(UserBase):
     pass
