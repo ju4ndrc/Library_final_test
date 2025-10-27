@@ -1,6 +1,6 @@
 import datetime
 from typing import List
-
+from pydantic import EmailStr
 from sqlmodel import SQLModel, Field,Relationship
 from utils import Rol
 import uuid
@@ -12,6 +12,8 @@ class LibraryBase(SQLModel):
 
 class UserBase(SQLModel):
     name:str | None = Field(description="User name")
+    email: EmailStr = Field(default=None, unique = True)
+    password: str
     year : int | None = Field(description="User year")
     rol: Rol | None = Field(description="Rol", default=Rol.READER)
 
