@@ -23,8 +23,8 @@ async def login(credentials: HTTPBasicCredentials = Depends(security), session: 
             detail="Invalid credentials"
         )
 
-    current_sessions[user.email] = user.role
-    return {"message": f"Welcome {user.username}", "role": user.role}
+    current_sessions[user.email] = user.rol
+    return {"message": f"Welcome {user.name}", "role": user.rol}
 
 
 # Logout
@@ -49,6 +49,6 @@ def get_current_user(credentials: HTTPBasicCredentials = Depends(security), sess
 
 # proteccion de endpoints
 def admin_required(user: User = Depends(get_current_user)):
-    if user.role != "admin":
+    if user.rol != "admin":
         raise HTTPException(status_code=403, detail="Admin privileges required")
     return user
