@@ -76,6 +76,11 @@ class CreateBook(LibraryBase):
 class UpdateBook(LibraryBase):
     pass
 
+class CreateAuthor(AuthorBase):
+    pass
+
+class UpdateAuthor(AuthorBase):
+    pass
 
 
 class CreateUser(UserBase):

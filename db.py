@@ -11,7 +11,7 @@ def create_tables(app:FastAPI):
     SQLModel.metadata.create_all(engine)
     with engine.connect() as connection:
         connection.execute(text("PRAGMA foreign_keys=ON"))
-    yield
+
 
 def get_session():
     with Session(engine) as session:
