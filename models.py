@@ -67,7 +67,7 @@ class Author(AuthorBase, table=True):
     id: uuid.UUID = Field(default_factory=uuid.uuid4, primary_key=True)
 
     #cascade delete reference https://sqlmodel.tiangolo.com/tutorial/relationship-attributes/cascade-delete-relationships/?utm_source=chatgpt.com#configure-automatic-deletion
-    books: List["Book"] = Relationship(back_populates="author", cascade_delete=True)
+    books: List["Book"] = Relationship(back_populates="author", passive_deletes="all")
 
 
 class CreateBook(LibraryBase):
