@@ -29,7 +29,7 @@ class Library(LibraryBase, table=True):
 
 class BookBase(SQLModel):
     title: str = Field(description="Book title")
-    isbn: str = Field(description="Unique ISBN")
+    isbn: str = Field(unique=True,description="Unique ISBN")
     year: int = Field(description="Publication year")
     copies: int = Field(default=1, description="Number of copies available")
 
@@ -70,7 +70,7 @@ class Author(AuthorBase, table=True):
     books: List["Book"] = Relationship(back_populates="author", cascade_delete=True)
 
 
-class CreateBook(UserBase):
+class CreateBook(LibraryBase):
     pass
 
 class UpdateBook(LibraryBase):
@@ -81,7 +81,7 @@ class UpdateBook(LibraryBase):
 class CreateUser(UserBase):
     pass
 
-class UpdateUser(LibraryBase):
+class UpdateUser(UserBase):
     pass
 
 
