@@ -37,7 +37,7 @@ class BookBase(SQLModel):
 
 class Book(BookBase, table=True):
     id: uuid.UUID = Field(default_factory=uuid.uuid4,primary_key=True)
-    is_active: bool | None = Field(description="Active Book", default=True)
+
 
     #relacion con prestamos
     lends : list["Lend"] = Relationship(back_populates="book")
@@ -73,10 +73,10 @@ class Author(AuthorBase, table=True):
 
 
 class CreateBook(BookBase):
-    pass
+    author_id: uuid.UUID
 
 class UpdateBook(BookBase):
-    pass
+    author_id: uuid.UUID
 
 class CreateAuthor(AuthorBase):
     pass
@@ -97,4 +97,6 @@ class CreateLibrary(LibraryBase):
 
 class UpdateLibrary(LibraryBase):
     pass
+
+
 
