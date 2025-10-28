@@ -72,10 +72,10 @@ class Author(AuthorBase, table=True):
     books: List["Book"] = Relationship(back_populates="author", passive_deletes="all")
 
 
-class CreateBook(LibraryBase):
+class CreateBook(BookBase):
     pass
 
-class UpdateBook(LibraryBase):
+class UpdateBook(BookBase):
     pass
 
 class CreateAuthor(AuthorBase):
