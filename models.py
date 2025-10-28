@@ -2,8 +2,9 @@ import datetime
 from typing import List
 from pydantic import EmailStr
 from sqlmodel import SQLModel, Field,Relationship
-from utils import Rol
 import uuid
+from app.utils.utils import Rol
+
 
 class LibraryBase(SQLModel):
     name:str | None = Field(default=None,description="Library name")
