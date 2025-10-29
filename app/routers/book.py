@@ -1,6 +1,4 @@
 import uuid
-from http.client import responses
-
 from fastapi import APIRouter,HTTPException,status
 from sqlmodel import select
 from db import SessionDep
