@@ -17,12 +17,12 @@ async def create_library(library_data:CreateLibrary,session:SessionDep):
     session.refresh(library)
     return library
 
-@router.get("/show",response_model = list[Library])
+@router.get("/show",response_model = list[Library],status_code=status.HTTP_200_OK)
 async def show_library(session:SessionDep):
     response = session.exec(select(Library)).all()
     return response
 
-@router.patch("/update_id/{id}",response_model=Library,status_code=status.HTTP_201_CREATED)
+@router.patch("/update_id/{library_id}",response_model=Library,status_code=status.HTTP_201_CREATED)
 async def updateLibrary(library_id: uuid.UUID,library_data:UpdateLibrary,session:SessionDep):
     library_db = session.get(Library, library_id)
 
