@@ -26,12 +26,12 @@ def session_fixture():
         yield session
     SQLModel.metadata.drop_all(engine) #dropall permite borrar las tablas para cada prueba
 
-@pytest.fixture(name="client")
+@pytest.fixture(name="user")
 def client_fixture(session: Session):
     def get_session_override():
         return session #aqui devolvemos la sesion
 
     app.dependency_overrides[get_session] = get_session_override #aqui nos aseeguramos de usar la session de test
-    client = TestClient(app)
-    yield client
+    user = TestClient(app)
+    yield user
     app.dependency_overrides.clear()

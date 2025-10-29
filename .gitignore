@@ -7,3 +7,5 @@ __
 *library.sqlite3
 *.env
 .env
+*db.sqlite3
+*.sqlite3
