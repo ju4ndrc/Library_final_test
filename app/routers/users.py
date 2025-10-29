@@ -2,6 +2,7 @@ import uuid
 
 from dotenv.cli import unset
 from fastapi import APIRouter, status, HTTPException, Query, Depends
+from fastapi.openapi.utils import status_code_ranges
 from sqlalchemy.orm import deferred
 
 from app.auth.auth_router import admin_required
@@ -24,24 +25,29 @@ async def createUser(user_data: CreateUser, session:SessionDep):
     session.refresh(user)
     return user
 
-@router.get("/",response_model=list[User])
+@router.get("/",response_model=list[User],status_code=status.HTTP_200_OK)
 async def show_all_users(session:SessionDep):
     response = session.exec(select(User)).all()
     return response
 
-@router.get("/active",response_model=list[User])
+@router.get("/active",response_model=list[User],status_code=status.HTTP_200_OK)
 async def show_active_users(session:SessionDep):
     users = session.exec(select(User).where(User.is_active == True)).all()
     return users
 
 
-@router.get("/inactive",response_model=list[User])
+@router.get("/inactive",response_model=list[User], status_code=status.HTTP_200_OK)
 async def show_inactive_users(session:SessionDep):
     users = session.exec(select(User).where(User.is_active == False)).all()
     return users
-
+@router.get("/{user_id}", response_model=User, status_code=status.HTTP_200_OK)
+async def get_user_by_id(user_id: uuid.UUID, session: SessionDep):
+    user = session.get(User, user_id)
+    if not user:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
+    return user
 @router.patch("/update_id/{user_id}",response_model=User,status_code=status.HTTP_201_CREATED)
-async def update_user(user_id: uuid.UUID , user_data:UpdateUser,session:SessionDep, user : User = Depends(admin_required)):
+async def update_user(user_id: uuid.UUID , user_data:UpdateUser,session:SessionDep):
     user_db = session.get(User, user_id)
 
     if not user_db:
@@ -54,7 +60,7 @@ async def update_user(user_id: uuid.UUID , user_data:UpdateUser,session:SessionD
     return user_db
 
 @router.delete("/delete_user/{user_id}", response_model=User,status_code=status.HTTP_202_ACCEPTED)
-async def delete_user(user_id: uuid.UUID ,session:SessionDep, user : User = Depends(admin_required)):
+async def delete_user(user_id: uuid.UUID ,session:SessionDep):
     user_db = session.get(User, user_id)
     if not user_db:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
@@ -65,7 +71,7 @@ async def delete_user(user_id: uuid.UUID ,session:SessionDep, user : User = Depe
     session.commit()
     return {"message":"User desactivated","user_id":user_id}
 @router.patch("/active_user/{user_id}", response_model=User,status_code=status.HTTP_202_ACCEPTED)
-async def active_user(user_id: uuid.UUID ,session:SessionDep, user : User = Depends(admin_required)):
+async def active_user(user_id: uuid.UUID ,session:SessionDep):
     user_db = session.get(User, user_id)
     if not user_db:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
