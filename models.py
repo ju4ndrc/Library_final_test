@@ -1,6 +1,6 @@
 import datetime
 from typing import List
-from pydantic import EmailStr
+from pydantic import EmailStr, BaseModel
 from sqlmodel import SQLModel, Field,Relationship
 import uuid
 from app.utils.utils import Rol
@@ -47,15 +47,16 @@ class Book(BookBase, table=True):
     author : "Author" = Relationship(back_populates="books")
 
 class LendBookBase(SQLModel):
-    loan_date: datetime.date = Field(default_factory=datetime.date.today)
-    return_date: datetime.date | None = None
+    lend_date: datetime.date = Field(default_factory=datetime.date.today)
     fine: float | None = Field(default=0.0, description="Fine for late return")
+
 
 
 class Lend(LendBookBase, table=True):
     id: uuid.UUID = Field(default_factory=uuid.uuid4, primary_key=True)
     user_id: uuid.UUID = Field(foreign_key="user.id")#relacion entre clase lend y clase user
     book_id: uuid.UUID = Field(foreign_key="book.id")#relacion entre clase book y clase prestamo
+    return_date: datetime.date | None = None
 
     #relaciones hacia muchos usuarios y muchos libros
     user:"User" = Relationship(back_populates="lends")
@@ -72,6 +73,13 @@ class Author(AuthorBase, table=True):
     #cascade delete reference https://sqlmodel.tiangolo.com/tutorial/relationship-attributes/cascade-delete-relationships/?utm_source=chatgpt.com#configure-automatic-deletion
     books: List["Book"] = Relationship(back_populates="author", passive_deletes="all")
 
+class CreateLend(LendBookBase):
+    user_id:uuid.UUID
+    book_id:uuid.UUID
+    return_date : datetime.date | None = None
+
+class UpdateLend(BaseModel):
+    return_date : datetime.date | None = None
 
 class CreateBook(BookBase):
     author_id: uuid.UUID
